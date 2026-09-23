@@ -1,17 +1,22 @@
 /*
- To guess a number between positive numbers between 0 to x where x > 2
- 1 - Print info about game
- 2 - Collect the max value from user or if empty use default value of 100
- 3 - Use the random number generator with max value as boundary to generate a random number
- 4 - Enter into while loop: condition while true
-    1 - Prompt user for guess and the collect guess
-    2 - check if guess == randomInt
-        1 - If match print celebrations info with number of attempts
-        2 - break out of the while
-    3 - Due to guess being incorrect print below condition
-        1 - If guess is higher than randomInt print lower
-        2 - If guess is lower than randomInt print higher
-    4 - continue while loop
+ Guess a secret number between 1 and x, where x > 2
+ 1 - Print welcome info about the game
+ 2 - Enter outer loop (play again):
+    1 - Prompt for max value or use default of 100 if empty
+    2 - Generate secret_number between 1 and max value
+    3 - Play the round (inner loop):
+       1 - Prompt user for guess and collect input
+       2 - Validate guess is an integer within 1 to max value
+       3 - If guess == secret_number:
+          1 - Print celebration with number of attempts
+          2 - Break out of inner loop
+       4 - If guess is incorrect:
+          1 - If guess is lower than secret_number, print higher hint
+          2 - If guess is higher than secret_number, print lower hint
+       5 - Continue inner loop
+    4 - Ask play again (Y/N)
+       1 - If Y, start a new round from step 2
+       2 - If anything else, print goodbye and exit outer loop
  */
 
 use std::io;
