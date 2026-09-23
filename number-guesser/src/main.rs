@@ -21,29 +21,48 @@ use rand::RngExt;
 fn main() {
     println!("Hello welcome to Number Guesser");
     println!("--------------------------------");
-    println!("Enter max value or leave empty for 100 max (must be greater than 2)");
 
     let mut user_input: String = String::new();
-    let mut max_value: Option<u32> = None;
+    let mut max_value_option: Option<u32> = None;
 
+    loop {
+        println!("Enter max value or leave empty for 100 max (must be greater than 2)");
+        let max_value = read_max_value(&mut max_value_option, &mut user_input);
+        let secret_number: u32 = rand::rng().random_range(1..=max_value);
 
-    let max_value = read_max_value(&mut max_value, &mut user_input);
-    
-    let secret_number: u32 = rand::rng().random_range(1..=max_value);
+        play(max_value, &mut user_input, secret_number);
 
-    play(max_value, &mut user_input, secret_number);
+        if !ask_play_again(&mut user_input) {
+            println!("Thanks for playing!");
+            break
+        }
+    }
+
+}
+fn ask_play_again(input: &mut String) -> bool {
+
+    println!("Do you want to play again! Y/N");
+    input.clear();
+
+    io::stdin().read_line(input).expect("Failed to read line");
+
+    match input.trim() {
+        "Y" |  "y" => true,
+        _ => false
+    }
+
 }
 
-fn read_max_value(max_value: &mut Option<u32>, mut user_input: &mut String) -> u32 {
-    while max_value.is_none() {
+fn read_max_value(max_value_option: &mut Option<u32>, mut user_input: &mut String) -> u32 {
+    while max_value_option.is_none() {
         user_input.clear();
 
         io::stdin().read_line(&mut user_input).expect("Failed to read line");
 
-        *max_value = parse_max_value(&user_input);
+        *max_value_option = parse_max_value(&user_input);
     }
 
-    max_value.take().unwrap()
+    max_value_option.take().unwrap()
 }
 fn parse_max_value(input: &str) -> Option<u32> {
     match input.trim().parse() {
@@ -59,6 +78,7 @@ fn parse_max_value(input: &str) -> Option<u32> {
         }
     } 
 }
+
 
 fn play(max_value: u32, mut user_input: &mut String, secret_number: u32 ) {
     let mut attempts: u32 = 0;
