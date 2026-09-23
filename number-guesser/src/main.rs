@@ -27,14 +27,14 @@ fn main() {
     let mut max_value: Option<u32> = None;
 
 
-    let max_value = get_max_value(&mut max_value, &mut user_input);
+    let max_value = read_max_value(&mut max_value, &mut user_input);
     
-    let random_int: u32 = rand::rng().random_range(1..=max_value);
+    let secret_number: u32 = rand::rng().random_range(1..=max_value);
 
-    take_a_guess(max_value, &mut user_input, random_int);
+    play(max_value, &mut user_input, secret_number);
 }
 
-fn get_max_value(max_value: &mut Option<u32>, mut user_input: &mut String) -> u32 {
+fn read_max_value(max_value: &mut Option<u32>, mut user_input: &mut String) -> u32 {
     while max_value.is_none() {
         user_input.clear();
 
@@ -60,13 +60,15 @@ fn parse_max_value(input: &str) -> Option<u32> {
     } 
 }
 
-fn take_a_guess(max_value: u32, mut user_input: &mut String, random_int: u32 ) {
+fn play(max_value: u32, mut user_input: &mut String, secret_number: u32 ) {
+    let mut attempts: u32 = 0;
 
     loop {
+        attempts += 1;
         println!("Guess number from 1 to {}", max_value);
         user_input.clear();
         io::stdin().read_line(&mut user_input).expect("Failed to read line");
-        let guess_value = match user_input.trim().parse() {
+        let parsed_guess = match user_input.trim().parse() {
             Ok(n) if n <= max_value && n > 0 => Some(n),
             Ok(_) => {
                 println!("Number not within 1 to {} range", &max_value);
@@ -78,19 +80,19 @@ fn take_a_guess(max_value: u32, mut user_input: &mut String, random_int: u32 ) {
             }
         };
 
-        let guess = match guess_value {
+        let guess = match parsed_guess {
             Some(n) => n,
             None => continue
         };
 
-        if guess == random_int {
-            celebrate_msg(guess);
+        if guess == secret_number {
+            print_celebration(guess, attempts);
             break;
         };
         println!("{} is an incorrect guess!", guess);
         println!("");
 
-        let hint = guess_hint(guess, random_int);
+        let hint = guess_hint(guess, secret_number);
 
         println!("-------------------------{}-------------------------------", hint);
         println!("------------------------Try again!--------------------------");
@@ -98,8 +100,8 @@ fn take_a_guess(max_value: u32, mut user_input: &mut String, random_int: u32 ) {
     }
 }
 
-fn guess_hint(guess: u32, random_int: u32)-> &'static str{
-    if guess < random_int {
+fn guess_hint(guess: u32, secret_number: u32)-> &'static str{
+    if guess < secret_number {
         "Guess higher"
     }
     else {
@@ -108,12 +110,12 @@ fn guess_hint(guess: u32, random_int: u32)-> &'static str{
 }
 
 
-fn celebrate_msg(actual_value: u32) -> () {
+fn print_celebration(correct_guess: u32, attempts: u32) -> () {
     println!("******************************************************************");
     println!("******************************************************************");
     println!("**********************Congratulations******************************");
     println!("**************You guessed the correct number**********************");
-    println!("***************************{}!*************************************", actual_value);
+    println!("***************************{}! It took {} attempt(s)*************************************", correct_guess, attempts);
 }
 
 
@@ -127,7 +129,7 @@ mod tests {
     }
 
     #[test]
-    fn max_value_must_be_greater_than_w(){
+    fn max_value_must_be_greater_than_two(){
         assert_eq!(parse_max_value("2"), None);
     }
 
