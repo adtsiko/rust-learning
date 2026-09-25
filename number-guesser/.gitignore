@@ -8,3 +8,4 @@
 # Windows executables and debug symbols
 *.exe
 *.pdb
+**/target/
