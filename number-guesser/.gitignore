@@ -1,0 +1,11 @@
+# Cargo build output
+/target/
+
+# Binaries built outside target (e.g. rustc -o src/main)
+/src/main
+/number-guesser
+
+# Windows executables and debug symbols
+*.exe
+*.pdb
+**/target/

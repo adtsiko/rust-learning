@@ -1,0 +1,9 @@
+# Cargo build output (all projects)
+**/target/
+
+# Runtime data files
+**/train.json
+**/scores.json
+
+# Local git history backup
+.git.backup/
